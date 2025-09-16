@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug LegalMind</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 10px 20px; margin: 5px; }
+        pre { background: #f4f4f4; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Debug LegalMind</h1>
+    
+    <button onclick="testHealth()">Test Health</button>
+    <button onclick="testAnalyze()">Test Analyze</button>
+    <button onclick="testDeepSeek()">Test DeepSeek Directo</button>
+    
+    <div id="result"></div>
+
+    <script>
+        async function testHealth() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing health...';
+            
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                result.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                result.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        async function testAnalyze() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing analysis...';
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: 'Texto de prueba para análisis. Este es un contrato de ejemplo con varias cláusulas legales estándar.',
+                        type: 'legal'
+                    })
+                });
+                
+                const data = await response.json();
+                result.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                result.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        async function testDeepSeek() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing DeepSeek direct...';
+            
+            try {
+                const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer sk-tu-api-key-real'
+                    },
+                    body: JSON.stringify({
+                        model: 'deepseek-chat',
+                        messages: [
+                            {
+                                role: 'user',
+                                content: 'Responde con OK si funciona'
+                            }
+                        ],
+                        max_tokens: 5
+                    })
+                });
+                
+                const data = await response.json();
+                result.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                result.innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
